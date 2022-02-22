@@ -46,10 +46,7 @@ class PostController extends Controller
     {
         $form_data = $request->all();
 
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required|max:60000'
-        ]);
+        $request->validate($this->formValidation());
 
         $new_post = new Post();
         $new_post->title = $form_data['title'];
@@ -110,6 +107,13 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function formValidation(){
+        return [
+            'title' => 'required|max:255',
+            'content' => 'required|max:60000'
+        ];
     }
 
     public function slugValidation($title){
