@@ -7,5 +7,11 @@
         <p>{{ $post_to_show->content }}</p>
 
         <a href="{{ route('admin.posts.edit',['post' => $post_to_show->id]) }}" class="btn btn-primary">Edit Post</a>
+
+        <form action="{{ route('admin.posts.destroy' , ['post' => $post_to_show->id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger mt-2"> Delete Post </button>
+        </form>
     </section>
 @endsection
