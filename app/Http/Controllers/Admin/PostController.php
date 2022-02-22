@@ -76,18 +76,23 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ! Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $post_to_edit = Post::findOrFail($id);
+
+        $data = [
+            'post_to_edit' => $post_to_edit
+        ];
+        return view('admin.posts.edit', $data);
     }
 
     /**
-     * Update the specified resource in storage.
+     * ! Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -95,7 +100,18 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $form_data = $request->all();
+
+        $post = Post::findOrFail($id);
+
+        if($form_data['title'] != $post->title){
+            $form_data['slug'] = $this->slugValidation($post->title);
+        }
+
+        $post->update($form_data);
+
+        return redirect()->route('admin.posts.show',['post' => $post->id]);
+
     }
 
     /**
