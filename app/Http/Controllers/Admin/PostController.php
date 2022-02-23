@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
+use App\Category;
 
 
 class PostController extends Controller
@@ -33,7 +34,12 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        $data =[
+            'categories' => $categories
+        ];
+
+        return view('admin.posts.create', $data);
     }
 
     /**
@@ -52,6 +58,7 @@ class PostController extends Controller
         $new_post->title = $form_data['title'];
         $new_post->content = $form_data['content'];
         $new_post->slug = $this->slugValidation($new_post->title);
+        $new_post->category_id = $form_data['category_id'];
         $new_post->save();
 
         return redirect()->route('admin.posts.show',['post' => $new_post->id]);
@@ -67,9 +74,8 @@ class PostController extends Controller
     public function show($id)
     {
         $post_to_show = Post::findOrFail($id);
-
         $data = [
-            'post_to_show' => $post_to_show
+            'post_to_show' => $post_to_show,
         ];
 
         return view('admin.posts.show', $data);
@@ -84,9 +90,11 @@ class PostController extends Controller
     public function edit($id)
     {
         $post_to_edit = Post::findOrFail($id);
+        $categories = Category::all();
 
         $data = [
-            'post_to_edit' => $post_to_edit
+            'post_to_edit' => $post_to_edit,
+            'categories' => $categories
         ];
         return view('admin.posts.edit', $data);
     }
@@ -101,11 +109,12 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         $form_data = $request->all();
+        $request->validate($this->formValidation());
 
         $post = Post::findOrFail($id);
 
         if($form_data['title'] != $post->title){
-            $form_data['slug'] = $this->slugValidation($post->title);
+            $form_data['slug'] = $this->slugValidation($form_data['title']);
         }
 
         $post->update($form_data);
@@ -132,7 +141,8 @@ class PostController extends Controller
     public function formValidation(){
         return [
             'title' => 'required|max:255',
-            'content' => 'required|max:60000'
+            'content' => 'required|max:60000',
+
         ];
     }
 
