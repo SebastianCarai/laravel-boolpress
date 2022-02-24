@@ -21,9 +21,7 @@ class CategoryController extends Controller
 
     public function show($slug){
         $category_to_show = Category::where('slug', '=', $slug)->first();
-        $posts = Post::where('category_id', '=', $category_to_show->id);
-        dd($posts);
-
+        $posts = Post::where('category_id', '=', $category_to_show->id)->get();
 
         if(!$category_to_show){
             abort('404');
