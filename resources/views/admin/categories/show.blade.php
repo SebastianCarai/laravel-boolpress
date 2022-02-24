@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
 
 @section('section')
-    {{dd($category_to_show)}}
+    {{dd($posts)}}
 @endsection
