@@ -71,7 +71,6 @@ class PostController extends Controller
         }
 
         return redirect()->route('admin.posts.show',['post' => $new_post->id]);
-
     }
 
     /**
@@ -153,6 +152,8 @@ class PostController extends Controller
         return [
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
+            'category_id' => 'exists:categories,id|nullable',
+            'tags' => 'exists:tags,id|nullable'
 
         ];
     }
