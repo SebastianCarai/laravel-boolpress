@@ -101,10 +101,13 @@ class PostController extends Controller
     {
         $post_to_edit = Post::findOrFail($id);
         $categories = Category::all();
+        $tags = Tag::all();
 
         $data = [
             'post_to_edit' => $post_to_edit,
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags,
+            'post_tags' => $post_to_edit->tags
         ];
         return view('admin.posts.edit', $data);
     }
@@ -120,14 +123,18 @@ class PostController extends Controller
     {
         $form_data = $request->all();
         $request->validate($this->formValidation());
-
         $post = Post::findOrFail($id);
-
         if($form_data['title'] != $post->title){
             $form_data['slug'] = $this->slugValidation($form_data['title']);
         }
 
         $post->update($form_data);
+
+        if (isset($form_data['tags'])){
+            $post->tags()->sync($form_data['tags']);
+        } else{
+            $post->tags()->sync([]);
+        }
 
         return redirect()->route('admin.posts.show',['post' => $post->id]);
 

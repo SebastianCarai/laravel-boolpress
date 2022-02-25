@@ -16,10 +16,14 @@
     <form action="{{ route('admin.posts.update', ['post' => $post_to_edit->id]) }}" method="POST">
         @csrf
         @method('PUT')
+
+        {{-- Post title input --}}
         <div class="mb-3">
             <label for="title" class="form-label">Post Title</label>
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post_to_edit->title) }}">
         </div>
+
+        {{-- Categories select --}}
         <div class="mb-3">
             <label for="category_id" class="form-label">Seleziona categoria</label>
             <select class="form-select" id="category_id" name="category_id">
@@ -29,11 +33,45 @@
                 @endforeach
             </select>
         </div>
+
+        {{-- Tag checkboxes --}}
+        <div class="mb-3">
+            <h5>Edit Tags</h5>
+            @foreach ($tags as $tag)
+                <div class="form-check">
+
+                    @if ($errors->any())
+                        <input  
+                            class="form-check-input" 
+                            type="checkbox" 
+                            value="{{ $tag->id }}" 
+                            id="tag-{{ $tag->id }}" 
+                            name="tags[]"
+                            {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} 
+                        \>
+                    @else
+                        <input  
+                            class="form-check-input" 
+                            type="checkbox" 
+                            value="{{ $tag->id }}" 
+                            id="tag-{{ $tag->id }}" 
+                            name="tags[]"
+                            {{-- The contains() methods checks if the function's argument can be found in the Collection --}}
+                            {{$post_tags->contains($tag->id) ? 'checked' : ''}}
+                        \> 
+                    @endif
+
+                    <label class="form-check-label" for="tag-{{ $tag->id }}">{{ $tag->name }}</label>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Post content input --}}
         <div class="mb-3">
             <label for="content" class="form-label">Post Content</label>
             <textarea name="content" id="content" cols="30" rows="10" class="form-control">{{ old('content', $post_to_edit->content) }}</textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
     </form>
 @endsection
