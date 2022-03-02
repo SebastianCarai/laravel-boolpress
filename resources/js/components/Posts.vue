@@ -21,7 +21,28 @@
                             <a href="#" class="card-link">Another link</a>
                         </div> -->
                     </div>
-                </div>
+                </div>             
+            </div>
+
+            <!-- Pagination NAV -->
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item" :class="{disabled : this.currentPage===1}">
+                        <a class="page-link" href="#" @click="postsApiCall(currentPage - 1)">Previous</a>
+                    </li>
+                    <!-- <li class="page-item">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li> -->
+                    <li class="page-item" :class="{disabled : this.currentPage===this.lastPage}" >
+                        <a class="page-link" href="#" @click="postsApiCall(currentPage + 1)">Next</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
@@ -32,17 +53,31 @@ export default {
     name: 'Posts',
     data: function(){
         return{
-            posts: []
+            posts: [],
+            postsPerPage: false,
+            currentPage: 1,
+            lastPage: false,
         }
     },
     methods:{
+
         // Axios call to the api created in the Api/PostController
-        postsApiCall : function(){
-            axios.get('http://127.0.0.1:8000/api/posts')
+        // When the user clicks 'previous' and 'next' buttons, the param "page" changes, and the API return other posts
+        postsApiCall : function(pageToSearch){
+            axios.get('http://127.0.0.1:8000/api/posts', {
+                params:{
+                    'page' : pageToSearch
+                }
+            })
             .then((response) =>{
-                this.posts = response.data.posts;
+                this.posts = response.data.posts.data;
+                this.postsPerPage = response.data.posts.per_page;
+                this.currentPage = response.data.posts.current_page;
+                this.lastPage = response.data.posts.last_page
             });
         },
+
+        // If the post content is longer than 50 characters, this function cuts it and adds '...' at the end
         cutContentText: function(textToCut, maxChar){
             if (textToCut.length > maxChar){
                 return textToCut.substring(0,50) + '...';
@@ -52,7 +87,7 @@ export default {
         }
     },
     created: function(){
-        this.postsApiCall();
+        this.postsApiCall(this.currentPage);
     }
 }
 </script>

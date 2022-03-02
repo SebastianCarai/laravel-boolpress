@@ -1937,22 +1937,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Posts',
   data: function data() {
     return {
-      posts: []
+      posts: [],
+      postsPerPage: false,
+      currentPage: 1,
+      lastPage: false
     };
   },
   methods: {
     // Axios call to the api created in the Api/PostController
-    postsApiCall: function postsApiCall() {
+    // When the user clicks 'previous' and 'next' buttons, the param "page" changes, and the API return other posts
+    postsApiCall: function postsApiCall(pageToSearch) {
       var _this = this;
 
-      axios.get('http://127.0.0.1:8000/api/posts').then(function (response) {
-        _this.posts = response.data.posts;
+      axios.get('http://127.0.0.1:8000/api/posts', {
+        params: {
+          'page': pageToSearch
+        }
+      }).then(function (response) {
+        _this.posts = response.data.posts.data;
+        _this.postsPerPage = response.data.posts.per_page;
+        _this.currentPage = response.data.posts.current_page;
+        _this.lastPage = response.data.posts.last_page;
       });
     },
+    // If the post content is longer than 50 characters, this function cuts it and adds '...' at the end
     cutContentText: function cutContentText(textToCut, maxChar) {
       if (textToCut.length > maxChar) {
         return textToCut.substring(0, 50) + '...';
@@ -1962,7 +1995,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    this.postsApiCall();
+    this.postsApiCall(this.currentPage);
   }
 });
 
@@ -2505,6 +2538,56 @@ var render = function () {
         }),
         0
       ),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex justify-content-center" }, [
+        _c("ul", { staticClass: "pagination" }, [
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: { disabled: this.currentPage === 1 },
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.postsApiCall(_vm.currentPage - 1)
+                    },
+                  },
+                },
+                [_vm._v("Previous")]
+              ),
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: { disabled: this.currentPage === this.lastPage },
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function ($event) {
+                      return _vm.postsApiCall(_vm.currentPage + 1)
+                    },
+                  },
+                },
+                [_vm._v("Next")]
+              ),
+            ]
+          ),
+        ]),
+      ]),
     ]),
   ])
 }
