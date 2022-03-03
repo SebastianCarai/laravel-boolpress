@@ -27,18 +27,15 @@
             <!-- Pagination NAV -->
             <div class="d-flex justify-content-center">
                 <ul class="pagination">
+                    <!-- Previous btn -->
                     <li class="page-item" :class="{disabled : this.currentPage===1}">
                         <a class="page-link" href="#" @click="postsApiCall(currentPage - 1)">Previous</a>
                     </li>
+                    <!-- Number links -->
                     <li class="page-item" v-for="n in lastPage" :key="n" @click="postsApiCall(n)">
                         <a class="page-link" href="#">{{n}}</a>
                     </li> 
-                    <!-- <li class="page-item active" aria-current="page">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li> -->
+                    <!-- Next btn -->
                     <li class="page-item" :class="{disabled : this.currentPage===this.lastPage}" >
                         <a class="page-link" href="#" @click="postsApiCall(currentPage + 1)">Next</a>
                     </li>
