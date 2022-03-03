@@ -1976,7 +1976,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('http://127.0.0.1:8000/api/posts', {
         params: {
-          'page': pageToSearch
+          page: pageToSearch
         }
       }).then(function (response) {
         _this.posts = response.data.posts.data;
@@ -2540,53 +2540,78 @@ var render = function () {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "d-flex justify-content-center" }, [
-        _c("ul", { staticClass: "pagination" }, [
-          _c(
-            "li",
-            {
-              staticClass: "page-item",
-              class: { disabled: this.currentPage === 1 },
-            },
-            [
-              _c(
-                "a",
+        _c(
+          "ul",
+          { staticClass: "pagination" },
+          [
+            _c(
+              "li",
+              {
+                staticClass: "page-item",
+                class: { disabled: this.currentPage === 1 },
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "page-link",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.postsApiCall(_vm.currentPage - 1)
+                      },
+                    },
+                  },
+                  [_vm._v("Previous")]
+                ),
+              ]
+            ),
+            _vm._v(" "),
+            _vm._l(_vm.lastPage, function (n) {
+              return _c(
+                "li",
                 {
-                  staticClass: "page-link",
-                  attrs: { href: "#" },
+                  key: n,
+                  staticClass: "page-item",
                   on: {
                     click: function ($event) {
-                      return _vm.postsApiCall(_vm.currentPage - 1)
+                      return _vm.postsApiCall(n)
                     },
                   },
                 },
-                [_vm._v("Previous")]
-              ),
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              staticClass: "page-item",
-              class: { disabled: this.currentPage === this.lastPage },
-            },
-            [
-              _c(
-                "a",
-                {
-                  staticClass: "page-link",
-                  attrs: { href: "#" },
-                  on: {
-                    click: function ($event) {
-                      return _vm.postsApiCall(_vm.currentPage + 1)
+                [
+                  _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                    _vm._v(_vm._s(n)),
+                  ]),
+                ]
+              )
+            }),
+            _vm._v(" "),
+            _c(
+              "li",
+              {
+                staticClass: "page-item",
+                class: { disabled: this.currentPage === this.lastPage },
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "page-link",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.postsApiCall(_vm.currentPage + 1)
+                      },
                     },
                   },
-                },
-                [_vm._v("Next")]
-              ),
-            ]
-          ),
-        ]),
+                  [_vm._v("Next")]
+                ),
+              ]
+            ),
+          ],
+          2
+        ),
       ]),
     ]),
   ])

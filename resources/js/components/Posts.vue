@@ -30,10 +30,10 @@
                     <li class="page-item" :class="{disabled : this.currentPage===1}">
                         <a class="page-link" href="#" @click="postsApiCall(currentPage - 1)">Previous</a>
                     </li>
-                    <!-- <li class="page-item">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item active" aria-current="page">
+                    <li class="page-item" v-for="n in lastPage" :key="n" @click="postsApiCall(n)">
+                        <a class="page-link" href="#">{{n}}</a>
+                    </li> 
+                    <!-- <li class="page-item active" aria-current="page">
                         <a class="page-link" href="#">2</a>
                     </li>
                     <li class="page-item">
@@ -66,7 +66,7 @@ export default {
         postsApiCall : function(pageToSearch){
             axios.get('http://127.0.0.1:8000/api/posts', {
                 params:{
-                    'page' : pageToSearch
+                    page : pageToSearch
                 }
             })
             .then((response) =>{
