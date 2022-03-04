@@ -6,20 +6,12 @@
             <div class="row row-cols-3">
                 <div class="col my-3" v-for="(post,index) in posts" :key="index">
                     <div class="card" style="width: 18rem;">
-                        <!-- <img src="..." class="card-img-top" alt="..."> -->
                         <div class="card-body">
                             <h5 class="card-title">{{ post.title}}</h5>
                             <p class="card-text">{{ cutContentText(post.content, 50)}}</p>
+                            <!-- This router link redirects to the post detail page -->
+                            <router-link :to="{name: 'post-details', params:{slug : post.slug}}">Leggi il post</router-link>
                         </div>
-                        <!-- <ul class="list-group list-group-flush">
-                            <li class="list-group-item">An item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                        </ul> -->
-                        <!-- <div class="card-body">
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div> -->
                     </div>
                 </div>             
             </div>
@@ -29,15 +21,15 @@
                 <ul class="pagination">
                     <!-- Previous btn -->
                     <li class="page-item" :class="{disabled : this.currentPage===1}">
-                        <a class="page-link" href="#" @click="postsApiCall(currentPage - 1)">Previous</a>
+                        <a class="page-link" @click="postsApiCall(currentPage - 1)">Previous</a>
                     </li>
                     <!-- Number links -->
                     <li class="page-item" v-for="n in lastPage" :key="n" @click="postsApiCall(n)">
-                        <a class="page-link" href="#">{{n}}</a>
+                        <a class="page-link">{{n}}</a>
                     </li> 
                     <!-- Next btn -->
                     <li class="page-item" :class="{disabled : this.currentPage===this.lastPage}" >
-                        <a class="page-link" href="#" @click="postsApiCall(currentPage + 1)">Next</a>
+                        <a class="page-link" @click="postsApiCall(currentPage + 1)">Next</a>
                     </li>
                 </ul>
             </div>
