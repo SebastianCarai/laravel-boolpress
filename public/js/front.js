@@ -2233,6 +2233,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TagDetails',
   data: function data() {
@@ -2248,7 +2250,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('http://127.0.0.1:8000/api/tags/' + this.$route.params.slug).then(function (response) {
         console.log(response.data);
         _this.tag = response.data.tag_to_show;
-        _this.relatedPosts = response.data.tag_posts;
+        _this.relatedPosts = response.data.tag_posts; // If the tag does not exist, the user gets redirected to the Not Found Page
 
         if (!_this.tag) {
           _this.$router.push({
@@ -2257,6 +2259,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    // Capitalize the first letter of a word
     capitalizeFirstLetter: function capitalizeFirstLetter(text) {
       return text.charAt(0).toUpperCase() + text.slice(1);
     }
