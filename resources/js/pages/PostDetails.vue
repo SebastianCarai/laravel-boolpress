@@ -4,7 +4,13 @@
 
         <h5 v-if="post.category">Category: {{post.category.name}}</h5>
         <h4>
-            <span class="badge badge-primary mr-2" v-for="tag in post.tags" :key="tag.id">{{tag.name}}</span>
+            <router-link 
+                class="badge badge-primary mr-2" 
+                v-for="tag in post.tags" :key="tag.id"
+                :to="{name: 'tag-details', params:{slug: tag.slug}}"
+            >
+                {{tag.name}}
+            </router-link>
         </h4>
         <p>{{ post.content }}</p>
     </div>
