@@ -6,7 +6,7 @@
 
         @if ($post_to_show->cover)
             <div class="my-3">
-                <img src="{{ asset('storage/' . $post_to_show->cover) }}" alt="{{$post_to_show->title}}" style="max-width: 500px">
+                <img src="{{ $post_to_show->cover }}" alt="{{$post_to_show->title}}" style="max-width: 500px">
             </div>
         @endif
 

@@ -3,7 +3,7 @@
         <h1>{{post.title}}</h1>
 
         <div>
-            <img :src="post.cover" alt="">
+            <img :src="post.cover" alt="" style="max-width: 500px">
         </div>
 
         <h5 v-if="post.category">Category: {{post.category.name}}</h5>

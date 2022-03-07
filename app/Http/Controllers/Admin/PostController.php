@@ -72,8 +72,9 @@ class PostController extends Controller
         if (isset($form_data['cover'])){
             // Store the image in the public/storage/uploads folder
             $img_path = Storage::put('uploads', $form_data['cover']);
+            $url = Storage::url($img_path);
             // Store in the db
-            $new_post->cover = $img_path;
+            $new_post->cover = $url;
         }
 
 

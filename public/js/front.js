@@ -3767,7 +3767,12 @@ var render = function () {
   return _c("div", { staticClass: "container" }, [
     _c("h1", [_vm._v(_vm._s(_vm.post.title))]),
     _vm._v(" "),
-    _c("div", [_c("img", { attrs: { src: _vm.post.cover, alt: "" } })]),
+    _c("div", [
+      _c("img", {
+        staticStyle: { "max-width": "500px" },
+        attrs: { src: _vm.post.cover, alt: "" },
+      }),
+    ]),
     _vm._v(" "),
     _vm.post.category
       ? _c("h5", [_vm._v("Category: " + _vm._s(_vm.post.category.name))])
