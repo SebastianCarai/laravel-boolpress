@@ -4,6 +4,12 @@
     <section>
         <h2>{{ $post_to_show->title }}</h2>
 
+        @if ($post_to_show->cover)
+            <div class="my-3">
+                <img src="{{ asset('storage/' . $post_to_show->cover) }}" alt="{{$post_to_show->title}}" style="max-width: 500px">
+            </div>
+        @endif
+
         <h5><strong>Categoria:</strong>
             @if ($post_to_show->category)
                 {{$post_to_show->category->name}}

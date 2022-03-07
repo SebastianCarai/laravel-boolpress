@@ -66,6 +66,13 @@ class PostController extends Controller
         $new_post->content = $form_data['content'];
         $new_post->slug = $this->slugValidation($new_post->title);
         $new_post->category_id = $form_data['category_id'];
+
+        // Store the image in the public/storage/uploads folder
+        $img_path = Storage::put('uploads', $form_data['cover']);
+        // Store in the db
+        $new_post->cover = $img_path;
+
+
         $new_post->save();
 
         // If the tag key exists, it creates the rows in the post_tag table
@@ -75,12 +82,7 @@ class PostController extends Controller
             $new_post->tags()->sync([]);
         }
 
-        // Store the image in the public/storage/uploads folder
-        $img_path = Storage::put('uploads', $form_data['cover']);
-        // Get the absolut path of the image
-        $url = Storage::url($img_path);
-        // Store in the db
-        $new_post->cover = $url;
+
 
         return redirect()->route('admin.posts.show',['post' => $new_post->id]);
     }
@@ -146,6 +148,12 @@ class PostController extends Controller
             $form_data['slug'] = $this->slugValidation($form_data['title']);
         }
 
+        if(isset($form_data['cover']) && $form_data['cover'] != $post->cover){
+            Storage::delete($post->cover);
+            $new_path = Storage::put('uploads', $form_data['cover']);
+            $post->cover = $new_path;
+        }
+
         $post->update($form_data);
 
         // If the tags exists change them, or store as new tags
@@ -179,14 +187,15 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required|max:60000',
             'category_id' => 'exists:categories,id|nullable',
-            'tags' => 'exists:tags,id|nullable'
+            'tags' => 'exists:tags,id|nullable',
+            'cover' => 'image|nullable'
 
         ];
     }
 
     public function slugValidation($title){
         // Till the function finds another slug in the DB (equal to the one we want to save), 
-        // this function adds a "-" at the end of the new slug, followed by a number set by a counter
+        // it adds a "-" at the end of the new slug, followed by a number set by a counter
         $slug = Str::slug($title);
         $slug_base = $slug;
 

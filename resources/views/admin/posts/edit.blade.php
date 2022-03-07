@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.posts.update', ['post' => $post_to_edit->id]) }}" method="POST">
+    <form action="{{ route('admin.posts.update', ['post' => $post_to_edit->id]) }}" method="POST" enctype="multipart/form-data"> 
         @csrf
         @method('PUT')
 
@@ -22,6 +22,20 @@
             <label for="title" class="form-label">Post Title</label>
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $post_to_edit->title) }}">
         </div>
+
+        {{-- File input --}}
+        <div class="mb-3">
+            <h5>Cover</h5>
+            <label for="cover" class="form-label">Select image</label>
+            <input type="file" id="cover" name="cover">
+        </div>
+        {{-- If the image already exists --}}
+        @if ($post_to_edit->cover)
+            <div class="my-3">
+                <span>Your current cover:</span>
+                <img src="{{ asset('storage/' . $post_to_edit->cover) }}" alt="{{$post_to_edit->title}}" style="max-width: 200px">
+            </div>
+        @endif
 
         {{-- Categories select --}}
         <div class="mb-3">
