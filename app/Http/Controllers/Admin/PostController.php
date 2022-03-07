@@ -9,6 +9,8 @@ use App\Post;
 use App\Category;
 use App\Tag;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\CreatedPostEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class PostController extends Controller
@@ -67,10 +69,12 @@ class PostController extends Controller
         $new_post->slug = $this->slugValidation($new_post->title);
         $new_post->category_id = $form_data['category_id'];
 
-        // Store the image in the public/storage/uploads folder
-        $img_path = Storage::put('uploads', $form_data['cover']);
-        // Store in the db
-        $new_post->cover = $img_path;
+        if (isset($form_data['cover'])){
+            // Store the image in the public/storage/uploads folder
+            $img_path = Storage::put('uploads', $form_data['cover']);
+            // Store in the db
+            $new_post->cover = $img_path;
+        }
 
 
         $new_post->save();
@@ -82,7 +86,7 @@ class PostController extends Controller
             $new_post->tags()->sync([]);
         }
 
-
+        Mail::to('accountditest@mail.com')->send(new CreatedPostEmail($new_post));
 
         return redirect()->route('admin.posts.show',['post' => $new_post->id]);
     }

@@ -2176,6 +2176,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'PostDetails',
   data: function data() {
@@ -2189,7 +2193,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('http://127.0.0.1:8000/api/posts/' + this.$route.params.slug).then(function (response) {
         _this.post = response.data.post_to_show;
-        console.log(_this.post); // If the post does not exist, the user gets redirected to the Not Found Page
+        console.log(_this.post.cover); // If the post does not exist, the user gets redirected to the Not Found Page
 
         if (!_this.post) {
           _this.$router.push({
@@ -3762,6 +3766,8 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("h1", [_vm._v(_vm._s(_vm.post.title))]),
+    _vm._v(" "),
+    _c("div", [_c("img", { attrs: { src: _vm.post.cover, alt: "" } })]),
     _vm._v(" "),
     _vm.post.category
       ? _c("h5", [_vm._v("Category: " + _vm._s(_vm.post.category.name))])
