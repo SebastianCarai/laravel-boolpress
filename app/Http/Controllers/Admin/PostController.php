@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Post;
 use App\Category;
 use App\Tag;
+use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -53,10 +54,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // Get the data from the form compiled by the user
         $form_data = $request->all();
 
+        // Validate the form data
         $request->validate($this->formValidation());
 
+        // Storing the validated data in the db
         $new_post = new Post();
         $new_post->title = $form_data['title'];
         $new_post->content = $form_data['content'];
@@ -64,11 +68,19 @@ class PostController extends Controller
         $new_post->category_id = $form_data['category_id'];
         $new_post->save();
 
+        // If the tag key exists, it creates the rows in the post_tag table
         if(isset($form_data['tags'])){
             $new_post->tags()->sync($form_data['tags']);
         }else{
             $new_post->tags()->sync([]);
         }
+
+        // Store the image in the public/storage/uploads folder
+        $img_path = Storage::put('uploads', $form_data['cover']);
+        // Get the absolut path of the image
+        $url = Storage::url($img_path);
+        // Store in the db
+        $new_post->cover = $url;
 
         return redirect()->route('admin.posts.show',['post' => $new_post->id]);
     }
@@ -82,7 +94,6 @@ class PostController extends Controller
     public function show($id)
     {
         $post_to_show = Post::findOrFail($id);
-        // dd($post_to_show->category);
         $data = [
             'post_to_show' => $post_to_show,
             'tags' => $post_to_show->tags
@@ -121,15 +132,23 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Get the data from the form compiled by the user
         $form_data = $request->all();
+
+        // Validate the form data
         $request->validate($this->formValidation());
+
+        // Search the post in the db (the $id is taken from the url)
         $post = Post::findOrFail($id);
+
+        // If the user changed the title, then it changes also the slug
         if($form_data['title'] != $post->title){
             $form_data['slug'] = $this->slugValidation($form_data['title']);
         }
 
         $post->update($form_data);
 
+        // If the tags exists change them, or store as new tags
         if (isset($form_data['tags'])){
             $post->tags()->sync($form_data['tags']);
         } else{

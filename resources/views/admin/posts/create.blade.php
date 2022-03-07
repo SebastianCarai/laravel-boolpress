@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.posts.store') }}" method="POST">
+    <form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
 
@@ -23,9 +23,15 @@
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}">
         </div>
 
+        {{-- File input --}}
+        <div class="mb-3">
+            <label for="cover" class="form-label">Select image</label>
+            <input type="file" id="cover" name="cover">
+        </div>
+
         {{-- Categories select --}}
         <div class="mb-3">
-            <label for="category_id" class="form-label">Seleziona categoria</label>
+            <label for="category_id" class="form-label">Select category</label>
             <select class="form-select" id="category_id" name="category_id">
                 <option value=""></option>
                 @foreach ($categories as $category)
